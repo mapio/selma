@@ -26,4 +26,3 @@ quote-style = "single"
 
 [tool.hatch.version]
 source = "versioningit"
-path = "src/selma/__init__.py"
