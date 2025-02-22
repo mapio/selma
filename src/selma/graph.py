@@ -8,8 +8,8 @@ from selma.geom import get_rect_edge_intersection
 MANIM_WIDTH = 16
 MANIM_HEIGHT = 9
 
-def gvlayout_factory(algo = "dot", fontsize = 32, heightscale = 1):
-  
+
+def gvlayout_factory(algo='dot', fontsize=32, heightscale=1):
   def gvlayout(G):
     A = nx.nx_agraph.to_agraph(G)
     for node in A.nodes():
@@ -17,8 +17,10 @@ def gvlayout_factory(algo = "dot", fontsize = 32, heightscale = 1):
       n.attr['shape'] = 'box'
       n.attr['fontsize'] = str(fontsize)
     A.layout(algo)
-    
-    pos_array = np.array([A.get_node(node).attr['pos'].split(',') for node in G.nodes()], dtype=float).T
+
+    pos_array = np.array(
+      [A.get_node(node).attr['pos'].split(',') for node in G.nodes()], dtype=float
+    ).T
 
     height = MANIM_HEIGHT * heightscale
     width = MANIM_WIDTH / MANIM_HEIGHT * height
@@ -34,12 +36,12 @@ def gvlayout_factory(algo = "dot", fontsize = 32, heightscale = 1):
       node: np.array([pos_array[0, i], pos_array[1, i], 0])
       for i, node in enumerate(G.nodes())
     }
-  
+
   return gvlayout
 
+
 class MGraph:
-  
-  def __init__(self, G, layout, stroke_color = BLUE, fill_color = BLACK):
+  def __init__(self, G, layout, stroke_color=BLUE, fill_color=BLACK):
     self.G = G
     self.layout = layout
     pos = layout(G)
@@ -48,7 +50,9 @@ class MGraph:
     for node in G.nodes():
       t = Tex(node, font_size=32)
       t.move_to(pos[node])
-      r = SurroundingRectangle(t, fill_color=fill_color, fill_opacity=1, color=stroke_color)
+      r = SurroundingRectangle(
+        t, fill_color=fill_color, fill_opacity=1, color=stroke_color
+      )
       r.set_z_index(t.z_index - 1)
       rect[node] = r
       self._nodes[node] = VGroup(t, r)
@@ -72,11 +76,15 @@ class MGraph:
       a.set_z_index(min(rect[s].z_index, rect[t].z_index) - 1)
       self._edges[(s, t)] = a
       self.iss = iss
+
   def mnode(self, node):
     return self._nodes[node]
+
   def mnodes(self):
     return VGroup(list(self._nodes.values()))
+
   def medge(self, s, t):
     return self._edges[(s, t)]
+
   def medges(self):
     return VGroup(list(self._edges.values()))

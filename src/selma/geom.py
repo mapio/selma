@@ -2,18 +2,27 @@ import numpy as np
 from manim import Arc
 
 
-def arctan2(p): # in [-π, π]
+def arctan2(p):  # in [-π, π]
   return np.arctan2(p[1], p[0])
 
-def shortest_arc(θp, θq): # in [-π, π]
+
+def shortest_arc(θp, θq):  # in [-π, π]
   return (θq - θp + np.pi) % (2 * np.pi) - np.pi
 
+
 def in_arc_range(θ, start_angle, arc_angle):
-  θa, θb = sorted([(start_angle + 2 * np.pi) % (2 * np.pi), (start_angle + arc_angle + 4 * np.pi) % (2 * np.pi)])
+  θa, θb = sorted(
+    [
+      (start_angle + 2 * np.pi) % (2 * np.pi),
+      (start_angle + arc_angle + 4 * np.pi) % (2 * np.pi),
+    ]
+  )
   return θa <= ((θ + 2 * np.pi) % (2 * np.pi)) <= θb
+
 
 def in_range(val, low, high, eps=1e-9):
   return low - eps <= val <= high + eps
+
 
 def get_rect_bounds(rect):
   """
@@ -62,6 +71,7 @@ def rect_intersect(r0, r1):
 
   # Return the intersection point closest to the center
   return min(valid, key=lambda tup: tup[0])[1]
+
 
 def compute_arc(P, Q, r):
   """
@@ -173,9 +183,9 @@ def get_arcs(R, S, radius):
   r = abs(radius)
 
   # The "full arc"
-  full_arc = Arc(
-    radius=r, start_angle=start_angle, angle=arc_angle 
-  ).move_arc_center_to([center[0], center[1], 0])
+  full_arc = Arc(radius=r, start_angle=start_angle, angle=arc_angle).move_arc_center_to(
+    [center[0], center[1], 0]
+  )
 
   candidate_R = [
     (th, pt)
@@ -185,7 +195,7 @@ def get_arcs(R, S, radius):
   if len(candidate_R) != 1:
     raise ValueError(f'Expected 1 intersection with R, got {len(candidate_R)}.')
   θr, _ = candidate_R[0]
-  
+
   candidate_S = [
     (th, pt)
     for (th, pt) in circle_intersect(center, r, S)
