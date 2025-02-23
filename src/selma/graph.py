@@ -89,14 +89,25 @@ class MGraph:
       rect[node] = r
       self._nodes[node] = VGroup(t, r)
     self._edges = {}
-    self._edgearcs = {}
+    self._paths = {}
     for s, t in G.edges():
       arc, arrow = _medge(rect[s], rect[t], EDGE_RADIUS)
       arrow.set_z_index(min(rect[s].z_index, rect[t].z_index) - 1)
       self._edges[(s, t)] = arrow
-      self._edgearcs[(s, t)] = arc
+      self._paths[(s, t)] = arc
     self.mnodes = VGroup(list(self._nodes.values()))
     self.medges = VGroup(list(self._edges.values()))
+    self.mpaths = VGroup(list(self._paths.values()))
+    
+  def shift(self, pos):
+    self.mnodes.shift(pos)
+    self.medges.shift(pos)
+    self.mpaths.shift(pos)
+    
+  def scale(self, scale):
+    self.mnodes.scale(scale)
+    self.medges.scale(scale)
+    self.mpaths.scale(scale)
 
   def mnode(self, node):
     return self._nodes[node]
@@ -105,7 +116,7 @@ class MGraph:
     return self._edges[(s, t)]
 
   def mpath(self, s, t):
-    return self._edgearcs[(s, t)]
+    return self._paths[(s, t)]
 
   def movealong(self, mobject, s, t) -> AnimationGroup:
     ag = AnimationGroup()
