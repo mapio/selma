@@ -24,15 +24,11 @@ def in_range(val, low, high, eps=1e-9):
   return low - eps <= val <= high + eps
 
 
-def get_rect_bounds(rect):
-  """
-  Given a Manim Rectangle (with get_vertices()),
-  returns (x_min, x_max, y_min, y_max).
-  """
-  vertices = rect.get_vertices()  # shape (4, 3)
-  xs = [v[0] for v in vertices]
-  ys = [v[1] for v in vertices]
-  return min(xs), max(xs), min(ys), max(ys)
+def rect_bounds(rect):
+  v = rect.get_vertices()
+  minx, miny, _ = np.min(v, axis=0)
+  maxx, maxy, _ = np.max(v, axis=0)
+  return minx, maxx, miny, maxy
 
 
 def rect_intersect(r0, r1):
@@ -42,7 +38,7 @@ def rect_intersect(r0, r1):
   """
   center = np.array(r0.get_center())
   direction = np.array(r1.get_center()) - center
-  x_min, x_max, y_min, y_max = get_rect_bounds(r0)
+  x_min, x_max, y_min, y_max = rect_bounds(r0)
 
   intersections = []
 
@@ -122,7 +118,7 @@ def circle_intersect(center, radius, rect):
   """
   r = abs(radius)
 
-  x_min, x_max, y_min, y_max = get_rect_bounds(rect)
+  x_min, x_max, y_min, y_max = rect_bounds(rect)
   results = []
 
   # ---- Vertical boundaries: x = x_min, x_max ----
@@ -164,49 +160,3 @@ def circle_intersect(center, radius, rect):
     if key not in unique:
       unique[key] = (theta, pt)
   return list(unique.values())
-
-
-def get_arcs(R, S, radius):
-  """
-  1) Compute the minor arc from P to Q on the circle of *signed* radius r.
-  2) Clip that arc by rectangles R (which encloses P) and S (which encloses Q).
-
-  Returns two tuples, each in the form:
-    (center, |r|, theta_start, arc_angle)
-  suitable for a Manim Arc(...).
-
-  - full_arc: the entire minor arc from P to Q.
-  - sub_arc:  the portion of that arc between the intersection with R's boundary
-              (exit) and S's boundary (entry).
-  """
-  center, start_angle, arc_angle = compute_arc(R.get_center(), S.get_center(), radius)
-  r = abs(radius)
-
-  # The "full arc"
-  full_arc = Arc(radius=r, start_angle=start_angle, angle=arc_angle).move_arc_center_to(
-    [center[0], center[1], 0]
-  )
-
-  candidate_R = [
-    (th, pt)
-    for (th, pt) in circle_intersect(center, r, R)
-    if in_arc_range(th, start_angle, arc_angle)
-  ]
-  if len(candidate_R) != 1:
-    raise ValueError(f'Expected 1 intersection with R, got {len(candidate_R)}.')
-  θr, _ = candidate_R[0]
-
-  candidate_S = [
-    (th, pt)
-    for (th, pt) in circle_intersect(center, r, S)
-    if in_arc_range(th, start_angle, arc_angle)
-  ]
-  if len(candidate_S) != 1:
-    raise ValueError(f'Expected 1 intersection with S, got {len(candidate_S)}.')
-  θs, _ = candidate_S[0]
-
-  sub_arc = Arc(
-    radius=r, start_angle=θr, angle=shortest_arc(θr, θs)
-  ).move_arc_center_to([center[0], center[1], 0])
-
-  return full_arc, sub_arc

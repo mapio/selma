@@ -1,21 +1,22 @@
 import networkx as nx
 import numpy as np
 
-from manim import VGroup, Tex, SurroundingRectangle, Arrow, BLACK, BLUE
+from manim import VGroup, Tex, SurroundingRectangle, MoveAlongPath, Arc, BLACK, BLUE
 
-from selma.geom import get_rect_edge_intersection
+from selma.geom import compute_arc, circle_intersect, shortest_arc, in_arc_range
+from selma.animations import AnimationGroup
 
 MANIM_WIDTH = 16
 MANIM_HEIGHT = 9
+EDGE_RADIUS = 10
+TIP_SIZE = 0.15
+ARROW_STROKE = 2
 
 
 def gvlayout_factory(algo='dot', fontsize=32, heightscale=1):
   def gvlayout(G):
     A = nx.nx_agraph.to_agraph(G)
-    for node in A.nodes():
-      n = A.get_node(node)
-      n.attr['shape'] = 'box'
-      n.attr['fontsize'] = str(fontsize)
+    A.node_attr.update(fontsize='12', shape='box')
     A.layout(algo)
 
     pos_array = np.array(
@@ -40,6 +41,37 @@ def gvlayout_factory(algo='dot', fontsize=32, heightscale=1):
   return gvlayout
 
 
+def _medge(R, S, radius):
+  center, start_angle, arc_angle = compute_arc(R.get_center(), S.get_center(), radius)
+  r = abs(radius)
+
+  # The "full arc"
+  arc = Arc(radius=r, start_angle=start_angle, angle=arc_angle).move_arc_center_to(
+    [center[0], center[1], 0]
+  )
+
+  def _filter(rect):
+    candidate = [
+      (th, pt)
+      for (th, pt) in circle_intersect(center, r, rect)
+      if in_arc_range(th, start_angle, arc_angle)
+    ]
+    if len(candidate) != 1:
+      raise ValueError(f'Expected 1 intersection with {R}, got {len(candidate)}.')
+    return candidate[0][0]
+
+  θr = _filter(R)
+  θs = _filter(S)
+
+  arrow = Arc(radius=r, start_angle=θr, angle=shortest_arc(θr, θs)).move_arc_center_to(
+    [center[0], center[1], 0]
+  )
+  arrow.set(stroke_width=ARROW_STROKE)
+  arrow.add_tip(tip_width=TIP_SIZE, tip_length=TIP_SIZE)
+
+  return arc, arrow
+
+
 class MGraph:
   def __init__(self, G, layout, stroke_color=BLUE, fill_color=BLACK):
     self.G = G
@@ -57,34 +89,26 @@ class MGraph:
       rect[node] = r
       self._nodes[node] = VGroup(t, r)
     self._edges = {}
-    iss = []
+    self._edgearcs = {}
     for s, t in G.edges():
-      ss = get_rect_edge_intersection(rect[s], rect[t])
-      tt = get_rect_edge_intersection(rect[t], rect[s])
-      iss.append(ss)
-      iss.append(tt)
-      a = Arrow(
-        ss,
-        tt,
-        max_stroke_width_to_length_ratio=float('inf'),
-        max_tip_length_to_length_ratio=float('inf'),
-        stroke_width=2,
-        tip_length=0.1,
-        buff=0,
-        path_arc=0.3,
-      )
-      a.set_z_index(min(rect[s].z_index, rect[t].z_index) - 1)
-      self._edges[(s, t)] = a
-      self.iss = iss
+      arc, arrow = _medge(rect[s], rect[t], EDGE_RADIUS)
+      arrow.set_z_index(min(rect[s].z_index, rect[t].z_index) - 1)
+      self._edges[(s, t)] = arrow
+      self._edgearcs[(s, t)] = arc
+    self.mnodes = VGroup(list(self._nodes.values()))
+    self.medges = VGroup(list(self._edges.values()))
 
   def mnode(self, node):
     return self._nodes[node]
 
-  def mnodes(self):
-    return VGroup(list(self._nodes.values()))
-
   def medge(self, s, t):
     return self._edges[(s, t)]
 
-  def medges(self):
-    return VGroup(list(self._edges.values()))
+  def mpath(self, s, t):
+    return self._edgearcs[(s, t)]
+
+  def movealong(self, mobject, s, t) -> AnimationGroup:
+    ag = AnimationGroup()
+    mobject.move_to(self._nodes[s])
+    ag.append([MoveAlongPath(mobject, self.mpath(s, t))])
+    return ag
