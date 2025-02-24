@@ -13,9 +13,10 @@ from manim import (
   WHITE,
   FadeIn,
   FadeOut,
+  Animation,
+  AnimationGroup,
+  Succession,
 )
-
-from selma.animations import AnimationGroup
 
 
 class MQueue:
@@ -31,39 +32,32 @@ class MQueue:
     ]
     self.rect = VGroup(self.trbl_sides)
 
-  def enqueue(self, re) -> AnimationGroup:
+  def enqueue(self, re) -> Animation:
     re.next_to(self.rect, LEFT)
-    ag = AnimationGroup()
-    ag.append(
-      lambda: [FadeIn(re), self.trbl_sides[3].animate.set_opacity(0)],
-      name='in',
-      run_time=0.5,
-    )
+    succ = [
+      AnimationGroup(
+        FadeIn(re), self.trbl_sides[3].animate.set_opacity(0), run_time=0.5
+      )
+    ]
     self.queue.appendleft(re)
     buff = 0
     shift = []
     for e in self.queue:
       buff += e.width + 0.2 * self.scale
       shift.append(e.animate.next_to(self.rect, LEFT, buff=-buff))
-    ag.append(shift, name='shift')
-    ag.append(lambda: [self.trbl_sides[3].animate.set_opacity(1)], name='close')
-    return ag
+    succ.append(AnimationGroup(shift))
+    succ.append(self.trbl_sides[3].animate.set_opacity(1))
+    return Succession(succ)
 
-  def dequeue(self) -> AnimationGroup:
+  def dequeue(self) -> Animation:
     e = self.queue.pop()
-    ag = AnimationGroup()
-    ag.append(
-      lambda: [self.trbl_sides[1].animate.set_opacity(0)],
-      name='out',
-      run_time=0.5,
+    return Succession(
+      AnimationGroup(self.trbl_sides[1].animate.set_opacity(0), run_time=0.5),
+      e.animate.next_to(self.rect, RIGHT),
+      AnimationGroup(
+        self.trbl_sides[1].animate.set_opacity(1), FadeOut(e), run_time=0.5
+      ),
     )
-    ag.append([e.animate.next_to(self.rect, RIGHT)])
-    ag.append(
-      lambda: [self.trbl_sides[1].animate.set_opacity(1), FadeOut(e)],
-      name='close',
-      run_time=0.5,
-    )
-    return ag
 
 
 class MStack:
@@ -79,36 +73,32 @@ class MStack:
     ]
     self.rect = VGroup(self.trbl_sides)
 
-  def push(self, re) -> AnimationGroup:
+  def push(self, re) -> Animation:
     re.next_to(self.rect, RIGHT)
-    ag = AnimationGroup()
-    ag.append(
-      lambda: [FadeIn(re), self.trbl_sides[1].animate.set_opacity(0)],
-      name='in',
-      run_time=0.5,
-    )
+    succ = [
+      AnimationGroup(
+        FadeIn(re), self.trbl_sides[1].animate.set_opacity(0), run_time=0.5
+      )
+    ]
     self.stack.append(re)
     buff = 0
     shift = []
     for e in self.stack:
       buff += e.width + 0.2 * self.scale
       shift.append(e.animate.next_to(self.rect, LEFT, buff=-buff))
-    ag.append(shift, name='shift')
-    ag.append(lambda: [self.trbl_sides[1].animate.set_opacity(2)], name='close')
-    return ag
+    succ.append(AnimationGroup(shift))
+    succ.append(self.trbl_sides[1].animate.set_opacity(2))
+    return Succession(succ)
 
-  def pop(self) -> AnimationGroup:
+  def pop(self) -> Animation:
     e = self.stack.pop()
-    ag = AnimationGroup()
-    ag.append(
-      lambda: [self.trbl_sides[1].animate.set_opacity(0)],
-      name='out',
-      run_time=0.5,
+    return Succession(
+      AnimationGroup(
+        self.trbl_sides[1].animate.set_opacity(0),
+        run_time=0.5,
+      ),
+      e.animate.next_to(self.rect, RIGHT),
+      AnimationGroup(
+        self.trbl_sides[1].animate.set_opacity(1), FadeOut(e), run_time=0.5
+      ),
     )
-    ag.append([e.animate.next_to(self.rect, RIGHT)])
-    ag.append(
-      lambda: [self.trbl_sides[1].animate.set_opacity(1), FadeOut(e)],
-      name='close',
-      run_time=0.5,
-    )
-    return ag

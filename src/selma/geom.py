@@ -156,6 +156,7 @@ def circle_intersect(center, radius, rect):
       unique[key] = (theta, pt)
   return list(unique.values())
 
+
 def arc_intersect(center, radius, start_angle, arc_angle, rect):
   candidate = [
     (th, pt)

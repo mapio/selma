@@ -1,17 +1,27 @@
 import networkx as nx
 import numpy as np
 
-from manim import VGroup, Text, Rectangle, MoveAlongPath, Arc, BLACK, BLUE, WHITE, OUT, IN
+from manim import (
+  VGroup,
+  Text,
+  Rectangle,
+  MoveAlongPath,
+  Arc,
+  BLACK,
+  BLUE,
+  WHITE,
+  Animation,
+)
 
 from selma.geom import compute_arc, arc_intersect, shortest_arc
-from selma.animations import AnimationGroup
 
 MANIM_WIDTH = 16
 MANIM_HEIGHT = 9
 EDGE_RADIUS = 10
 TIP_SIZE = 0.15
 ARROW_STROKE = 2
-BORDER = .3
+BORDER = 0.3
+
 
 def test_draw(G, layout):
   pos = {node: (pos[0], pos[1]) for node, pos in layout(G).items()}
@@ -49,7 +59,6 @@ def gvlayout_factory(algo='dot', fontsize=32, heightscale=1):
   return gvlayout
 
 
-
 def _medge(R, S, radius):
   center, start_angle, arc_angle = compute_arc(R.get_center(), S.get_center(), radius)
   radius = abs(radius)
@@ -61,9 +70,9 @@ def _medge(R, S, radius):
   θr = arc_intersect(center, radius, start_angle, arc_angle, R)
   θs = arc_intersect(center, radius, start_angle, arc_angle, S)
 
-  arrow = Arc(radius=radius, start_angle=θr, angle=shortest_arc(θr, θs)).move_arc_center_to(
-    [center[0], center[1], 0]
-  )
+  arrow = Arc(
+    radius=radius, start_angle=θr, angle=shortest_arc(θr, θs)
+  ).move_arc_center_to([center[0], center[1], 0])
   arrow.set_stroke(width=ARROW_STROKE)
   arrow.add_tip(tip_width=TIP_SIZE, tip_length=TIP_SIZE)
 
@@ -100,7 +109,6 @@ class MGraph:
     self.mnodes = VGroup(list(self._nodes.values()))
     self.medges = VGroup(list(self._edges.values()))
     self.mpaths = VGroup(list(self._paths.values()))
-    self.mgraph = VGroup(self.mnodes, self.medges)
 
   def shift(self, pos):
     self.mnodes.shift(pos)
@@ -121,8 +129,6 @@ class MGraph:
   def mpath(self, s, t):
     return self._paths[(s, t)]
 
-  def movealong(self, mobject, s, t) -> AnimationGroup:
-    ag = AnimationGroup()
+  def movealong(self, mobject, s, t) -> Animation:
     mobject.move_to(self._nodes[s])
-    ag.append([MoveAlongPath(mobject, self.mpath(s, t))])
-    return ag
+    return MoveAlongPath(mobject, self.mpath(s, t))
