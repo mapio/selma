@@ -15,16 +15,6 @@ def in_arc_range(θ, start_angle, arc_angle):
   return 0 <= (θ - start_angle) % (2 * np.pi) <= arc_angle  # % (2 * np.pi)
 
 
-def xin_arc_range(θ, start_angle, arc_angle):
-  θa, θb = sorted(
-    [
-      (start_angle + 2 * np.pi) % (2 * np.pi),
-      (start_angle + arc_angle + 4 * np.pi) % (2 * np.pi),
-    ]
-  )
-  return θa <= ((θ + 2 * np.pi) % (2 * np.pi)) <= θb
-
-
 def in_range(val, low, high, eps=1e-9):
   return low - eps <= val <= high + eps
 
@@ -165,3 +155,13 @@ def circle_intersect(center, radius, rect):
     if key not in unique:
       unique[key] = (theta, pt)
   return list(unique.values())
+
+def arc_intersect(center, radius, start_angle, arc_angle, rect):
+  candidate = [
+    (th, pt)
+    for (th, pt) in circle_intersect(center, radius, rect)
+    if in_arc_range(th, start_angle, arc_angle)
+  ]
+  if len(candidate) != 1:
+    raise ValueError(f'Expected 1 intersection with {rect}, got {len(candidate)}.')
+  return candidate[0][0]

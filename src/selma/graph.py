@@ -3,7 +3,7 @@ import numpy as np
 
 from manim import VGroup, Text, Rectangle, MoveAlongPath, Arc, BLACK, BLUE, WHITE, OUT, IN
 
-from selma.geom import compute_arc, circle_intersect, shortest_arc, in_arc_range
+from selma.geom import compute_arc, arc_intersect, shortest_arc
 from selma.animations import AnimationGroup
 
 MANIM_WIDTH = 16
@@ -49,29 +49,19 @@ def gvlayout_factory(algo='dot', fontsize=32, heightscale=1):
   return gvlayout
 
 
+
 def _medge(R, S, radius):
   center, start_angle, arc_angle = compute_arc(R.get_center(), S.get_center(), radius)
-  r = abs(radius)
+  radius = abs(radius)
 
-  # The "full arc"
-  arc = Arc(radius=r, start_angle=start_angle, angle=arc_angle).move_arc_center_to(
+  arc = Arc(radius=radius, start_angle=start_angle, angle=arc_angle).move_arc_center_to(
     [center[0], center[1], 0]
   )
 
-  def _filter(rect):
-    candidate = [
-      (th, pt)
-      for (th, pt) in circle_intersect(center, r, rect)
-      if in_arc_range(th, start_angle, arc_angle)
-    ]
-    if len(candidate) != 1:
-      raise ValueError(f'Expected 1 intersection with {R}, got {len(candidate)}.')
-    return candidate[0][0]
+  θr = arc_intersect(center, radius, start_angle, arc_angle, R)
+  θs = arc_intersect(center, radius, start_angle, arc_angle, S)
 
-  θr = _filter(R)
-  θs = _filter(S)
-
-  arrow = Arc(radius=r, start_angle=θr, angle=shortest_arc(θr, θs)).move_arc_center_to(
+  arrow = Arc(radius=radius, start_angle=θr, angle=shortest_arc(θr, θs)).move_arc_center_to(
     [center[0], center[1], 0]
   )
   arrow.set_stroke(width=ARROW_STROKE)
