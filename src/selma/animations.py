@@ -1,6 +1,11 @@
+from inspect import isfunction
 from typing import Callable
 
 DEBUG = False
+
+
+def islambda(l):
+  return isinstance(l, Callable) and l.__name__ == '<lambda>' and isfunction(l)
 
 
 class AnimationStep:
@@ -37,3 +42,23 @@ class AnimationGroup:
 
   def __repr__(self):
     return f'{self.steps=}'
+
+
+# class AnimationStep:
+#   pass
+
+# class PlayStep(AnimationStep):
+#   def __init__(self, *animations : list, run_time: float = 1):
+#     self.run_time = run_time
+#     self.animations = animations
+#   def merge(self, other: 'PlayStep'):
+#     self.animations += other.animations
+#     self.run_time = max(self.run_time, other.run_time)
+
+# class AddStep(AnimationStep):
+#   def __init__(self, *mobjects : list):
+#     self.mobjects = mobjects
+
+# class WaitStep(AnimationStep):
+#   def __init__(self, wait_time: float):
+#     self.wait_time = wait_time

@@ -1,7 +1,7 @@
 import networkx as nx
 import numpy as np
 
-from manim import VGroup, Tex, SurroundingRectangle, MoveAlongPath, Arc, BLACK, BLUE
+from manim import VGroup, Text, Rectangle, MoveAlongPath, Arc, BLACK, BLUE, WHITE, OUT, IN
 
 from selma.geom import compute_arc, circle_intersect, shortest_arc, in_arc_range
 from selma.animations import AnimationGroup
@@ -11,12 +11,20 @@ MANIM_HEIGHT = 9
 EDGE_RADIUS = 10
 TIP_SIZE = 0.15
 ARROW_STROKE = 2
+BORDER = .3
+
+def test_draw(G, layout):
+  pos = {node: (pos[0], pos[1]) for node, pos in layout(G).items()}
+  nx.draw_networkx_edges(
+    G, pos, edge_color='black', connectionstyle='arc3,rad=0.1', arrows=True
+  )
+  _ = nx.draw_networkx_labels(G, pos)
 
 
 def gvlayout_factory(algo='dot', fontsize=32, heightscale=1):
   def gvlayout(G):
     A = nx.nx_agraph.to_agraph(G)
-    A.node_attr.update(fontsize='12', shape='box')
+    A.node_attr.update(fontsize=fontsize, shape='box')
     A.layout(algo)
 
     pos_array = np.array(
@@ -66,7 +74,7 @@ def _medge(R, S, radius):
   arrow = Arc(radius=r, start_angle=θr, angle=shortest_arc(θr, θs)).move_arc_center_to(
     [center[0], center[1], 0]
   )
-  arrow.set(stroke_width=ARROW_STROKE)
+  arrow.set_stroke(width=ARROW_STROKE)
   arrow.add_tip(tip_width=TIP_SIZE, tip_length=TIP_SIZE)
 
   return arc, arrow
@@ -80,30 +88,35 @@ class MGraph:
     self._nodes = {}
     rect = {}
     for node in G.nodes():
-      t = Tex(node, font_size=32)
+      t = Text(node, color=WHITE, font_size=32)
       t.move_to(pos[node])
-      r = SurroundingRectangle(
-        t, fill_color=fill_color, fill_opacity=1, color=stroke_color
-      )
-      r.set_z_index(t.z_index - 1)
+      r = Rectangle(
+        width=t.width + BORDER,
+        height=t.height + BORDER,
+        fill_color=fill_color,
+        fill_opacity=1,
+        color=stroke_color,
+      ).move_to(t.get_center())
+      # r.set_z_index(t.z_index - 1)
       rect[node] = r
-      self._nodes[node] = VGroup(t, r)
+      self._nodes[node] = VGroup(r, t)
     self._edges = {}
     self._paths = {}
     for s, t in G.edges():
       arc, arrow = _medge(rect[s], rect[t], EDGE_RADIUS)
-      arrow.set_z_index(min(rect[s].z_index, rect[t].z_index) - 1)
+      # arrow.set_z_index(min(rect[s].z_index, rect[t].z_index) - 1)
       self._edges[(s, t)] = arrow
       self._paths[(s, t)] = arc
     self.mnodes = VGroup(list(self._nodes.values()))
     self.medges = VGroup(list(self._edges.values()))
     self.mpaths = VGroup(list(self._paths.values()))
-    
+    self.mgraph = VGroup(self.mnodes, self.medges)
+
   def shift(self, pos):
     self.mnodes.shift(pos)
     self.medges.shift(pos)
     self.mpaths.shift(pos)
-    
+
   def scale(self, scale):
     self.mnodes.scale(scale)
     self.medges.scale(scale)

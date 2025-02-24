@@ -11,6 +11,11 @@ def shortest_arc(θp, θq):  # in [-π, π]
 
 
 def in_arc_range(θ, start_angle, arc_angle):
+  # θ, start_angle, arc_angle = map(lambda x: x % (2 * np.pi), [θ, start_angle, arc_angle])
+  return 0 <= (θ - start_angle) % (2 * np.pi) <= arc_angle  # % (2 * np.pi)
+
+
+def xin_arc_range(θ, start_angle, arc_angle):
   θa, θb = sorted(
     [
       (start_angle + 2 * np.pi) % (2 * np.pi),
