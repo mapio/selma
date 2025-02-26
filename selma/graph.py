@@ -7,19 +7,13 @@ from manim import (
   Rectangle,
   MoveAlongPath,
   Arc,
-  BLACK,
-  BLUE,
-  WHITE,
   Animation,
+  DARK_BROWN
 )
 
+from selma import BACKGROUND, FOREGROUND, MANIM_HEIGHT, MANIM_WIDTH
 from selma.geom import compute_arc, arc_intersect, shortest_arc
 
-FOREGROUND = BLACK
-BACKGROUND = WHITE
-
-MANIM_WIDTH = 16
-MANIM_HEIGHT = 9
 EDGE_RADIUS = 10
 TIP_SIZE = 0.15
 ARROW_STROKE = 2
@@ -62,7 +56,7 @@ def gvlayout_factory(algo='dot', fontsize=32, heightscale=1):
   return gvlayout
 
 
-def _medge(R, S, radius):
+def _medge(R, S, radius, color = FOREGROUND):
   center, start_angle, arc_angle = compute_arc(R.get_center(), S.get_center(), radius)
   radius = abs(radius)
 
@@ -74,7 +68,7 @@ def _medge(R, S, radius):
   θs = arc_intersect(center, radius, start_angle, arc_angle, S)
 
   arrow = Arc(
-    radius=radius, start_angle=θr, angle=shortest_arc(θr, θs), stroke_color=FOREGROUND
+    radius=radius, start_angle=θr, angle=shortest_arc(θr, θs), stroke_color=color
   ).move_arc_center_to([center[0], center[1], 0])
   arrow.set_stroke(width=ARROW_STROKE)
   arrow.add_tip(tip_width=TIP_SIZE, tip_length=TIP_SIZE)
@@ -83,7 +77,7 @@ def _medge(R, S, radius):
 
 
 class MGraph:
-  def __init__(self, G, layout, stroke_color=BLUE, fill_color=BACKGROUND):
+  def __init__(self, G, layout, stroke_color=DARK_BROWN, fill_color=BACKGROUND, node_scale=1):
     self.G = G
     self.layout = layout
     pos = layout(G)
@@ -101,7 +95,7 @@ class MGraph:
       ).move_to(t.get_center())
       # r.set_z_index(t.z_index - 1)
       rect[node] = r
-      self._nodes[node] = VGroup(r, t)
+      self._nodes[node] = VGroup(r, t).scale(node_scale)
     self._edges = {}
     self._paths = {}
     for s, t in G.edges():
