@@ -1,17 +1,10 @@
-# Python-generated files
 __pycache__/
-*.py[oc]
-build/
-dist/
-wheels/
-*.egg-info
-
-# Virtual environments
 .venv
-
-# prj related
+*.slides.html
 animations/media/
-manim/
-prep/
-old/
 data/
+dist/
+manim/
+old/
+prep/
+uv.lock
