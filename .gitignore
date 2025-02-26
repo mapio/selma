@@ -10,7 +10,8 @@ wheels/
 .venv
 
 # prj related
-media/
+animations/media/
+manim/
 prep/
 old/
 data/

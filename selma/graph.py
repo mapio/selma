@@ -15,6 +15,9 @@ from manim import (
 
 from selma.geom import compute_arc, arc_intersect, shortest_arc
 
+FOREGROUND = BLACK
+BACKGROUND = WHITE
+
 MANIM_WIDTH = 16
 MANIM_HEIGHT = 9
 EDGE_RADIUS = 10
@@ -63,7 +66,7 @@ def _medge(R, S, radius):
   center, start_angle, arc_angle = compute_arc(R.get_center(), S.get_center(), radius)
   radius = abs(radius)
 
-  arc = Arc(radius=radius, start_angle=start_angle, angle=arc_angle).move_arc_center_to(
+  arc = Arc(radius=radius, start_angle=start_angle, angle=arc_angle, stroke_color=BACKGROUND).move_arc_center_to(
     [center[0], center[1], 0]
   )
 
@@ -71,7 +74,7 @@ def _medge(R, S, radius):
   θs = arc_intersect(center, radius, start_angle, arc_angle, S)
 
   arrow = Arc(
-    radius=radius, start_angle=θr, angle=shortest_arc(θr, θs)
+    radius=radius, start_angle=θr, angle=shortest_arc(θr, θs), stroke_color=FOREGROUND
   ).move_arc_center_to([center[0], center[1], 0])
   arrow.set_stroke(width=ARROW_STROKE)
   arrow.add_tip(tip_width=TIP_SIZE, tip_length=TIP_SIZE)
@@ -80,14 +83,14 @@ def _medge(R, S, radius):
 
 
 class MGraph:
-  def __init__(self, G, layout, stroke_color=BLUE, fill_color=BLACK):
+  def __init__(self, G, layout, stroke_color=BLUE, fill_color=BACKGROUND):
     self.G = G
     self.layout = layout
     pos = layout(G)
     self._nodes = {}
     rect = {}
     for node in G.nodes():
-      t = Text(node, color=WHITE, font_size=32)
+      t = Text(node, color=FOREGROUND, font_size=32)
       t.move_to(pos[node])
       r = Rectangle(
         width=t.width + BORDER,

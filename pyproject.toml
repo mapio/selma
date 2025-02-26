@@ -15,9 +15,6 @@ dependencies = [
 ]
 dynamic = ["version"]
 
-[project.scripts]
-selma = "selma:main"
-
 [build-system]
 requires = ["hatchling", "versioningit"]
 build-backend = "hatchling.build"
@@ -30,3 +27,16 @@ quote-style = "single"
 
 [tool.hatch.version]
 source = "versioningit"
+
+[tool.hatch.build.targets.wheel]
+packages = ["selma"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "selma",
+  "README.md",
+  "pyproject.toml",
+  "LICENSE-CC.txt",
+  "LICENSE-GPL.txt"
+]
+
