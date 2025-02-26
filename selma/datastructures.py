@@ -19,6 +19,7 @@ from manim import (
 
 from selma import FOREGROUND, BACKGROUND
 
+
 class MQueue:
   def __init__(self, width=10, height=1.1, scale=1):
     self.scale = scale
@@ -28,7 +29,7 @@ class MQueue:
       Line(rect.get_corner(UL), rect.get_corner(UR), color=FOREGROUND),
       Line(rect.get_corner(UR), rect.get_corner(DR), color=FOREGROUND),
       Line(rect.get_corner(DR), rect.get_corner(DL), color=FOREGROUND),
-      Line(rect.get_corner(DL), rect.get_corner(UL), color=FOREGROUND)
+      Line(rect.get_corner(DL), rect.get_corner(UL), color=FOREGROUND),
     ]
     self.rect = VGroup(self.trbl_sides)
 

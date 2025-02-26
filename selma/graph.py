@@ -66,9 +66,9 @@ def _medge(R, S, radius):
   center, start_angle, arc_angle = compute_arc(R.get_center(), S.get_center(), radius)
   radius = abs(radius)
 
-  arc = Arc(radius=radius, start_angle=start_angle, angle=arc_angle, stroke_color=BACKGROUND).move_arc_center_to(
-    [center[0], center[1], 0]
-  )
+  arc = Arc(
+    radius=radius, start_angle=start_angle, angle=arc_angle, stroke_color=BACKGROUND
+  ).move_arc_center_to([center[0], center[1], 0])
 
   θr = arc_intersect(center, radius, start_angle, arc_angle, R)
   θs = arc_intersect(center, radius, start_angle, arc_angle, S)
