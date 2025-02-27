@@ -187,7 +187,7 @@ RGG = nx.DiGraph(RGG.edges())
 RGG = nx.relabel_nodes(RGG, str)
 rgg_start, RGG = largest_reachable_subgraph(RGG)
 
-rgg_layout = gvlayout_factory('neato', heightscale=0.9)
+rgg_layout = gvlayout_factory('neato', heightscale=0.8)
 
 
 def fast_visit(scene, bag, graph, start, wait):
