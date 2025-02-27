@@ -19,6 +19,18 @@ def test_draw(G, layout):
   )
   _ = nx.draw_networkx_labels(G, pos)
 
+def rescale_pos(pos_array, heightscale=1):
+  height = MANIM_HEIGHT * heightscale
+  width = MANIM_WIDTH / MANIM_HEIGHT * height
+
+  min_x, min_y = np.min(pos_array, axis=0)
+  max_x, max_y = np.max(pos_array, axis=0)
+
+  # Map the positions to the new rectangle
+  pos_array[:, 0] = (pos_array[:, 0] - min_x) / (max_x - min_x) * width - width / 2
+  pos_array[:, 1] = (pos_array[:, 1] - min_y) / (max_y - min_y) * height - height / 2
+
+  return pos_array
 
 def gvlayout_factory(algo='dot', fontsize=32, heightscale=1):
   def gvlayout(G):
@@ -26,25 +38,14 @@ def gvlayout_factory(algo='dot', fontsize=32, heightscale=1):
     A.node_attr.update(fontsize=fontsize, shape='box')
     A.layout(algo)
 
-    pos_array = np.array(
+    pos_array = rescale_pos(np.array(
       [A.get_node(node).attr['pos'].split(',') for node in G.nodes()], dtype=float
-    ).T
-
-    height = MANIM_HEIGHT * heightscale
-    width = MANIM_WIDTH / MANIM_HEIGHT * height
-
-    min_x, min_y = np.min(pos_array, axis=1)
-    max_x, max_y = np.max(pos_array, axis=1)
-
-    # Map the positions to the new rectangle
-    pos_array[0] = (pos_array[0] - min_x) / (max_x - min_x) * width - width / 2
-    pos_array[1] = (pos_array[1] - min_y) / (max_y - min_y) * height - height / 2
-
+    ), heightscale)
+    
     return {
-      node: np.array([pos_array[0, i], pos_array[1, i], 0])
+      node: np.array([pos_array[i, 0], pos_array[i, 1], 0])
       for i, node in enumerate(G.nodes())
     }
-
   return gvlayout
 
 

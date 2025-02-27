@@ -1,164 +1,151 @@
-# %%
-from manim import *
+from manim import config, Scene, Dot, UP, DOWN, PURE_GREEN, GRAY_B, GRAY, BLACK
+import networkx as nx
 
 from selma import BACKGROUND
-from selma.graph import *
-from selma.datastructures import *
-import networkx as nx
+from selma.datastructures import MQueue, MStack
+from selma.graph import gvlayout_factory, MGraph
+
 
 config.background_color = BACKGROUND
 
-# %%
-import re
+class QBag:
+  def __init__(self, width, scale):
+    self.container = MQueue(width=width, scale=scale)
+  def add_to_scene(self, scene):
+    scene.add(self.container.rect.to_edge(UP))
+  def take(self):
+    return self.container.dequeue()
+  def give(self, n):
+    return self.container.enqueue(n)
+  def is_empty(self):
+    return not self.container.queue
+  def peek(self):
+    return self.container.queue[-1][1].text
 
-corpus = """
-Twinkle twinkle, little star,
-How I wonder what you are!
-Up above the world so high,
-Like a diamond in the sky.
-"""
+class SBag:
+  def __init__(self, width, scale):
+    self.container = MStack(width=width, scale=scale)
+  def take(self):
+    return self.container.pop()
+  def give(self, n):
+    return self.container.push(n)
+  def is_empty(self):
+    return not self.container.stack
+  def peek(self):
+    return self.container.stack[-1][1].text
+  
+# Ronald L. Breiger and Philippa E. Pattison 
+# Cumulated social roles: The duality of persons and their algebras,
+# 1 Social Networks, Volume 8, Issue 3, September 1986, Pages 215-256
 
-corpus = """
-This text is short. 
-This is a short text. 
-A short text is a simple example. 
-This simple text is short. 
-This short example is just a text.
-"""
+FFG = nx.DiGraph([
+  ('Acciaiuoli', 'Medici'),
+  ('Medici', 'Barbadori'),
+  ('Medici', 'Ridolfi'),
+  ('Medici', 'Tornabuoni'),
+  ('Medici', 'Albizzi'),
+  ('Medici', 'Salviati'),
+  ('Castellani', 'Peruzzi'),
+  ('Castellani', 'Strozzi'),
+  ('Peruzzi', 'Strozzi'),
+  ('Peruzzi', 'Bischeri'),
+  ('Strozzi', 'Ridolfi'),
+  ('Strozzi', 'Bischeri'),
+  ('Ridolfi', 'Tornabuoni'),
+  ('Tornabuoni', 'Guadagni'),
+  ('Albizzi', 'Ginori'),
+  ('Albizzi', 'Guadagni'),
+  ('Salviati', 'Pazzi'),
+  ('Bischeri', 'Guadagni'),
+  ('Guadagni', 'Lamberteschi'),
+  ('Ginori', 'Acciaiuoli'), # added
+  ('Barbadori', 'Castellani') # reversed
+])
 
-res = []
-words_list = re.findall(r'\b\w+\b', corpus.lower())
-edges_list = list((s, t) for s, t in zip(words_list, words_list[1:]))
-edges = set(edges_list)
-words = set(words_list)
+fflayout = gvlayout_factory('neato', heightscale=0.7)
 
-# %%
-G = nx.DiGraph()
-for s, t in edges:
-  G.add_edge(s, t)
-
-# %%
-layout = gvlayout_factory('fdp', heightscale=0.6)
-
-# %%
-test_draw(G, layout)
-
-# %%
-
-
-class BFS(Scene):
+class FlorentineFamilyGraph(Scene):
   def construct(self):
-    Q = MQueue()
-    self.add(Q.rect.scale(0.8).to_edge(UP))
-    MG = MGraph(G, layout)
-    MG.scale(0.8)
-    MG.shift(DOWN / 2)
-    self.add(MG.medges, MG.mnodes)
-    self.wait(0.1)
-    self.next_section()
-    seen = set(['this'])
-    dot = Dot(color=YELLOW)
-    self.play(Q.enqueue(MG.mnode('this').copy()))
-    MG.mnode('this').set(stroke_color=ORANGE)
-    while Q.queue:
-      e = Q.queue[-1][1].text
-      self.play(Q.dequeue())
-      MG.mnode(e).set(stroke_color=YELLOW)
-      for t in G.neighbors(e):
-        self.play(MG.movealong(dot, e, t))
-        if t in seen:
-          continue
-        seen.add(t)
-        MG.mnode(t).set(stroke_color=RED)
-        self.play(Q.enqueue(MG.mnode(t).copy()))
-      MG.mnode(e).set(stroke_color=GREEN)
-
-    # dot = Dot()
-    # MG.movealong(dot, 'just', 'a').play(self)
-
-    # self.play(MG.medge('this', 'is').copy().animate.set_stroke(width=5), run_time=0.3)
-
-    # Q.enqueue(MG.mnode('this').copy()).play(self)
-
-    # self.add(MG.mnode('this')[1].set_fill(color=ORANGE, opacity=.4))
-    # for edge in G.out_edges('this'):
-    #   self.add(MG.medge(*edge).set_color(ORANGE))
-
-    # w = {(s,t): 1 for s, t in G.edges}
-    # for s, t in G.edges:
-    #   e = MG.medge(s, t).copy()
-    #   dot = Dot(MG.mnode(s).get_center(), color=YELLOW)
-    #   self.play(MoveAlongPath(dot, e, run_time=0.3))
-    #   self.remove(dot)
-    #   w[(s, t)] += 2
-    #   self.play(Indicate(MG.mnode(t)), e.animate.set_stroke(width=w[(s, t)]), run_time=0.3)
-
-    self.wait(10)
-
-
-# %%
-
-
-class DFS(Scene):
+    MG = MGraph(FFG, fflayout, node_scale=.6)
+    self.add(MG.mgraph)
+    
+class FlorentineFamilyMarkedGraph(Scene):
   def construct(self):
-    S = MStack()
-    self.add(S.rect.scale(0.8).to_edge(UP))
-    MG = MGraph(G, layout)
-    MG.scale(0.8)
-    MG.shift(DOWN / 2)
-    self.add(MG.mnodes)
-    self.add(MG.medges)
+    MG = MGraph(FFG, fflayout, node_scale=.6)
+    self.add(MG.mgraph)
 
-    seen = set(['this'])
-    dot = Dot(color=YELLOW)
-    self.play(S.push(MG.mnode('this').copy()))
-    MG.mnode('this').set(stroke_color=ORANGE)
-    while S.stack:
-      e = S.stack[-1][1].text
-      self.play(S.pop())
-      MG.mnode(e).set(stroke_color=YELLOW)
-      for t in G.neighbors(e):
-        self.play(MG.movealong(dot, e, t))
-        if t in seen:
-          continue
-        seen.add(t)
-        self.play(S.push(MG.mnode(t).copy()))
-        MG.mnode(t).set(stroke_color=RED)
-        # S.push(MG.medge(e, t).copy()).play(self)
-      MG.mnode(e).set(stroke_color=GREEN)
+    def mark(n):
+      mn = MG.mnode(n)
+      mn[0].set_fill(color=GRAY_B, opacity=1)
+      mn.set(stroke_color=GRAY)
 
-    # dot = Dot()
-    # MG.movealong(dot, 'just', 'a').play(self)
+    def highlight(s, color):
+      ms = MG.mnode(s)
+      ms.set(stroke_color=color)
+      for t in FFG.neighbors(s):
+        MG.medge(s, t).set_color(color)
+      
+    mark('Strozzi')
+    highlight('Medici', PURE_GREEN)
+    
+def animate_visit(scene, bag, graph, start):
+  
+  dot = Dot(color=PURE_GREEN)
+  def highlight(s, turnon):
+    color = PURE_GREEN if turnon else BLACK
+    ms = graph.mnode(s)
+    ms.set(stroke_color=color)
+    if turnon: 
+      dot.move_to(ms.get_center())
+      scene.add(dot)
+      scene.wait(1)
+    for t in graph.G.neighbors(s):
+      graph.medge(s, t).set_color(color)
+    if not turnon:
+      scene.remove(dot)
+    
+  def give(n):
+    if n in give.nodes:
+      return
+    give.nodes.add(n)
+    mn = graph.mnode(n)
+    mn[0].set_fill(color=GRAY_B, opacity=1)
+    mn.set(stroke_color=GRAY_B)
+    scene.play(bag.give(mn.copy()), run_time=0.5)
+  give.nodes = set()
 
-    # self.play(MG.medge('this', 'is').copy().animate.set_stroke(width=5), run_time=0.3)
+  give(start)
+  while not bag.is_empty():
+    s = bag.peek()
+    scene.play(bag.take(), run_time=0.5)
+    highlight(s, True)
+    for t in graph.G.neighbors(s):
+      scene.play(graph.movealong(dot, s, t), run_time=0.5)
+      give(t)
+    highlight(s, False)
 
-    # S.push(MG.mnode('this').copy()).play(self)
+class FlorentineFamilyBFS(Scene):
+  def construct(self):
+    
+    bag = QBag(width=12, scale=.6)
+    bag.container.rect.to_edge(UP)
+    self.add(bag.container.rect)
 
-    # self.add(MG.mnode('this')[1].set_fill(color=ORANGE, opacity=.4))
-    # for edge in G.out_edges('this'):
-    #   self.add(MG.medge(*edge).set_color(ORANGE))
+    graph = MGraph(FFG, fflayout, scale=0.8, node_scale=0.6)
+    graph.shift(DOWN / 2)
+    self.add(graph.mgraph)
 
-    # w = {(s,t): 1 for s, t in G.edges}
-    # for s, t in G.edges:
-    #   e = MG.medge(s, t).copy()
-    #   dot = Dot(MG.mnode(s).get_center(), color=YELLOW)
-    #   self.play(MoveAlongPath(dot, e, run_time=0.3))
-    #   self.remove(dot)
-    #   w[(s, t)] += 2
-    #   self.play(Indicate(MG.mnode(t)), e.animate.set_stroke(width=w[(s, t)]), run_time=0.3)
-    self.wait(10)
+    animate_visit(self, bag, graph, 'Medici')
+    
+class FlorentineFamilyDFS(Scene):
+  def construct(self):
+    
+    bag = SBag(width=12, scale=.6)
+    bag.container.rect.to_edge(UP)
+    self.add(bag.container.rect)
 
+    graph = MGraph(FFG, fflayout, scale=0.8, node_scale=0.6)
+    graph.shift(DOWN / 2)
+    self.add(graph.mgraph)
 
-# %%
-S = MStack()
-S.push(Text('a'))
-S.push(Text('b'))
-S.stack
-
-# %%
-Q = MQueue()
-Q.enqueue(Text('a'))
-Q.enqueue(Text('b'))
-Q.queue
-
-# %%
+    animate_visit(self, bag, graph, 'Medici')

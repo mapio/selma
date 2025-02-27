@@ -1,6 +1,6 @@
 from importlib.metadata import version
 
-from manim import BLACK, DARK_BROWN
+from manim import BLACK
 
 __version__ = version('selma')
 

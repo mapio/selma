@@ -17,7 +17,7 @@ from manim import (
   Succession,
 )
 
-from selma import FOREGROUND, BACKGROUND
+from selma import FOREGROUND
 
 
 class MQueue:
@@ -65,12 +65,12 @@ class MStack:
   def __init__(self, width=10, height=1.1, scale=1):
     self.scale = scale
     self.stack = deque()
-    rect = Rectangle(width=width, height=height, color=FOREGROUND).scale(scale)
+    rect = Rectangle(width=width, height=height).scale(scale)
     self.trbl_sides = [
-      Line(rect.get_corner(UL), rect.get_corner(UR)),
-      Line(rect.get_corner(UR), rect.get_corner(DR)),
-      Line(rect.get_corner(DR), rect.get_corner(DL)),
-      Line(rect.get_corner(DL), rect.get_corner(UL)),
+      Line(rect.get_corner(UL), rect.get_corner(UR), color=FOREGROUND),
+      Line(rect.get_corner(UR), rect.get_corner(DR), color=FOREGROUND),
+      Line(rect.get_corner(DR), rect.get_corner(DL), color=FOREGROUND),
+      Line(rect.get_corner(DL), rect.get_corner(UL), color=FOREGROUND),
     ]
     self.rect = VGroup(self.trbl_sides)
 

@@ -1,5 +1,5 @@
 import numpy as np
-from manim import Arc
+import warnings
 
 
 def arctan2(p):  # in [-π, π]
@@ -164,5 +164,6 @@ def arc_intersect(center, radius, start_angle, arc_angle, rect):
     if in_arc_range(th, start_angle, arc_angle)
   ]
   if len(candidate) != 1:
-    raise ValueError(f'Expected 1 intersection with {rect}, got {len(candidate)}.')
+    warnings.warn(f'Expected 1 intersection with {rect}, got {len(candidate)}.')
+    return rect.get_center()
   return candidate[0][0]
