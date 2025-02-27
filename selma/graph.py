@@ -19,6 +19,7 @@ def test_draw(G, layout):
   )
   _ = nx.draw_networkx_labels(G, pos)
 
+
 def rescale_pos(pos_array, heightscale=1):
   height = MANIM_HEIGHT * heightscale
   width = MANIM_WIDTH / MANIM_HEIGHT * height
@@ -32,20 +33,25 @@ def rescale_pos(pos_array, heightscale=1):
 
   return pos_array
 
+
 def gvlayout_factory(algo='dot', fontsize=32, heightscale=1):
   def gvlayout(G):
     A = nx.nx_agraph.to_agraph(G)
     A.node_attr.update(fontsize=fontsize, shape='box')
     A.layout(algo)
 
-    pos_array = rescale_pos(np.array(
-      [A.get_node(node).attr['pos'].split(',') for node in G.nodes()], dtype=float
-    ), heightscale)
-    
+    pos_array = rescale_pos(
+      np.array(
+        [A.get_node(node).attr['pos'].split(',') for node in G.nodes()], dtype=float
+      ),
+      heightscale,
+    )
+
     return {
       node: np.array([pos_array[i, 0], pos_array[i, 1], 0])
       for i, node in enumerate(G.nodes())
     }
+
   return gvlayout
 
 
