@@ -1,15 +1,7 @@
 import networkx as nx
 import numpy as np
 
-from manim import (
-  VGroup,
-  Text,
-  Rectangle,
-  MoveAlongPath,
-  Arc,
-  Animation,
-  DARK_BROWN
-)
+from manim import VGroup, Text, Rectangle, MoveAlongPath, Arc, Animation, DARK_BROWN
 
 from selma import BACKGROUND, FOREGROUND, MANIM_HEIGHT, MANIM_WIDTH
 from selma.geom import compute_arc, arc_intersect, shortest_arc
@@ -56,7 +48,7 @@ def gvlayout_factory(algo='dot', fontsize=32, heightscale=1):
   return gvlayout
 
 
-def _medge(R, S, radius, color = FOREGROUND):
+def _medge(R, S, radius, color=FOREGROUND):
   center, start_angle, arc_angle = compute_arc(R.get_center(), S.get_center(), radius)
   radius = abs(radius)
 
@@ -77,7 +69,15 @@ def _medge(R, S, radius, color = FOREGROUND):
 
 
 class MGraph:
-  def __init__(self, G, layout, stroke_color=DARK_BROWN, fill_color=BACKGROUND, node_scale=1):
+  def __init__(
+    self,
+    G,
+    layout,
+    stroke_color=DARK_BROWN,
+    fill_color=BACKGROUND,
+    node_scale=1,
+    scale=1,
+  ):
     self.G = G
     self.layout = layout
     pos = layout(G)
@@ -105,16 +105,16 @@ class MGraph:
       self._paths[(s, t)] = arc
     self.mnodes = VGroup(list(self._nodes.values()))
     self.medges = VGroup(list(self._edges.values()))
+    self.mgraph = VGroup(self.medges, self.mnodes)
     self.mpaths = VGroup(list(self._paths.values()))
+    self.scale(scale)
 
   def shift(self, pos):
-    self.mnodes.shift(pos)
-    self.medges.shift(pos)
+    self.mgraph.shift(pos)
     self.mpaths.shift(pos)
 
   def scale(self, scale):
-    self.mnodes.scale(scale)
-    self.medges.scale(scale)
+    self.mgraph.scale(scale)
     self.mpaths.scale(scale)
 
   def mnode(self, node):
