@@ -13,9 +13,6 @@ class QBag:
   def __init__(self, width, scale):
     self.container = MQueue(width=width, scale=scale)
 
-  def add_to_scene(self, scene):
-    scene.add(self.container.rect.to_edge(UP))
-
   def take(self):
     return self.container.dequeue()
 
@@ -186,6 +183,10 @@ RGG = nx.random_geometric_graph(180, 0.11, seed=5)
 RGG = nx.DiGraph(RGG.edges())
 RGG = nx.relabel_nodes(RGG, str)
 rgg_start, RGG = largest_reachable_subgraph(RGG)
+
+rgg_remap = {o: str(n) for n, o in enumerate(RGG.nodes())}
+RGG = nx.relabel_nodes(RGG, rgg_remap.get)
+rgg_start = rgg_remap[rgg_start]
 
 rgg_layout = gvlayout_factory('neato', heightscale=0.8)
 

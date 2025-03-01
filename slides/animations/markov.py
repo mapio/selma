@@ -25,7 +25,7 @@ Up above the world so high,
 Like a diamond in the sky.
 """,
   'gadda': 'Come poco pepe a coppia cuoce e scoppia',  # Gadda
-  'giovanni': 'In principio era il Verbo, e il Verbo era presso Dio, e il Verbo era Dio',  # dal Vangelo di Giovanni, 1:1
+  'giovanni': 'In principio era il Verbo, e il Verbo era presso Dio, e il Verbo era Dio',  # Vangelo di Giovanni, 1:1
   'commedia': Path('../../data/commedia.txt').read_text(),
   'promessi': Path('../../data/papini.txt').read_text(),
 }
