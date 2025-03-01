@@ -2,6 +2,15 @@ from collections import defaultdict
 import random
 import re
 
+def clean_text(corpus):
+  res = [' ']
+  for c in corpus:
+    l = c.lower()
+    if l.isalpha():
+      res.append(l)
+    elif l == ' ' and res[-1] != ' ':
+      res.append(' ')
+  return ''.join(res[1:])
 
 class MarkovChainTextGenerator:
   def __init__(

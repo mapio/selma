@@ -10,7 +10,7 @@ EDGE_RADIUS = 10
 TIP_SIZE = 0.15
 ARROW_STROKE = 2
 BORDER = 0.3
-
+BORDER_COLOR = DARK_BROWN
 
 def test_draw(G, layout):
   pos = {node: (pos[0], pos[1]) for node, pos in layout(G).items()}
@@ -80,7 +80,7 @@ class MGraph:
     self,
     G,
     layout,
-    stroke_color=DARK_BROWN,
+    stroke_color=BORDER_COLOR,
     fill_color=BACKGROUND,
     node_scale=1,
     scale=1,
