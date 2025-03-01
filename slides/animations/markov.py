@@ -240,15 +240,21 @@ class GenerateByCharGadda2(Scene):
   def construct(self):
     random_walk(self, tokenize(CORPORA['gadda'], by_char=True), 2, 'c o', 20, seed=42)
 
+
 class GenerateByCharGadda3(Scene):
   def construct(self):
     random_walk(self, tokenize(CORPORA['gadda'], by_char=True), 3, 'c o p', 20, seed=42)
 
+
 class GenerateByWordGiovanni1(Scene):
   def construct(self):
-    random_walk(self, tokenize(CORPORA['giovanni'], by_char=False), 1, 'era', 17, seed=43)
+    random_walk(
+      self, tokenize(CORPORA['giovanni'], by_char=False), 1, 'era', 17, seed=43
+    )
 
 
 class GenerateByWordGiovanni2(Scene):
   def construct(self):
-    random_walk(self, tokenize(CORPORA['giovanni'], by_char=False), 2, 'era il', 16, seed=38)
+    random_walk(
+      self, tokenize(CORPORA['giovanni'], by_char=False), 2, 'era il', 16, seed=38
+    )
