@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from manim import config, Scene, Dot, UP, DOWN, PURE_GREEN, GRAY_B, GRAY, BLACK
 import networkx as nx
 

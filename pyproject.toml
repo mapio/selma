@@ -21,6 +21,7 @@ requires = ["hatchling", "versioningit"]
 build-backend = "hatchling.build"
 
 [tool.ruff]
+exclude = ["*.ipynb"]
 indent-width = 2
 
 [tool.ruff.format]
@@ -40,4 +41,3 @@ include = [
   "LICENSE-CC.txt",
   "LICENSE-GPL.txt"
 ]
-

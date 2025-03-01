@@ -1,13 +1,36 @@
+from pathlib import Path
 from random import Random
 
 import networkx as nx
-from manim import Tex, UL, PURE_GREEN, VGroup, BLACK, Dot
+from manim import Scene, Tex, UL, PURE_GREEN, VGroup, BLACK, Dot, config
 
 from selma import BACKGROUND
 from selma.mklm import clean_text
 from selma.graph import MGraph, BORDER_COLOR, gvlayout_factory
 
+config.background_color = BACKGROUND
+
 HIGHLIGHT_COLOR = PURE_GREEN
+
+CORPORA = {
+  'mc': """
+Markov chains are mathematical systems that undergo transitions from one state to another 
+on a state space. A sequence of possible events in which the probability of each event 
+depends only on the state attained in the previous event is called a Markov chain.
+""",
+  'ttls': """
+Twinkle, twinkle, little star,
+How I wonder what you are!
+Up above the world so high,
+Like a diamond in the sky.
+""",
+  'gadda': 'Come poco pepe a coppia cuoce e scoppia',  # Gadda
+  'giovanni': 'In principio era il Verbo, e il Verbo era presso Dio, e il Verbo era Dio',  # dal Vangelo di Giovanni, 1:1
+  'commedia': Path('../../data/commedia.txt').read_text(),
+  'promessi': Path('../../data/papini.txt').read_text(),
+}
+
+# Training
 
 
 def tokenize(corpus, by_char):
@@ -70,6 +93,67 @@ def build_markov_chain(scene, tokens, layout, node_scale, order=1):
       me.set_stroke(color=BLACK)
 
   return weight
+
+
+RESULTS = {}
+
+
+class TrainByCharGadda1(Scene):
+  def construct(self):
+    RESULTS['gadda1'] = build_markov_chain(
+      self,
+      tokenize(CORPORA['gadda'], by_char=True),
+      layout=gvlayout_factory('neato', heightscale=0.5),
+      node_scale=0.8,
+      order=1,
+    )
+
+
+class TrainByCharGadda2(Scene):
+  def construct(self):
+    RESULTS['gadda2'] = build_markov_chain(
+      self,
+      tokenize(CORPORA['gadda'], by_char=True),
+      layout=gvlayout_factory('neato', heightscale=0.5),
+      node_scale=0.8,
+      order=2,
+    )
+
+
+class TrainByCharGadda3(Scene):
+  def construct(self):
+    RESULTS['gadda3'] = build_markov_chain(
+      self,
+      tokenize(CORPORA['gadda'], by_char=True),
+      layout=gvlayout_factory('neato', heightscale=0.5),
+      node_scale=0.8,
+      order=3,
+    )
+
+
+class TrainByWordGiovanni1(Scene):
+  def construct(self):
+    RESULTS['giovanni1'] = build_markov_chain(
+      self,
+      tokenize(CORPORA['giovanni'], by_char=False),
+      layout=gvlayout_factory('neato', heightscale=0.6),
+      node_scale=0.6,
+      order=1,
+    )
+
+
+class TrainByWordGiovanni2(Scene):
+  def construct(self):
+    RESULTS['giovanni2'] = build_markov_chain(
+      self,
+      tokenize(CORPORA['giovanni'], by_char=False),
+      layout=gvlayout_factory('neato', heightscale=0.6),
+      node_scale=0.6,
+      order=2,
+    )
+
+
+# Generation
 
 
 def next_weight(weight):
@@ -142,3 +226,23 @@ def random_walk(scene, weight, start, num, seed=None):
       scene.wait(0.5)
     VGroup(*T[pos * 2 : 2 * (pos + order) + 1]).set_color(PURE_GREEN)
     s = t
+
+
+class GenerateByCharGadda1(Scene):
+  def construct(self):
+    random_walk(self, RESULTS['gadda1'], 'c', 20, seed=41)
+
+
+class GenerateByCharGadda2(Scene):
+  def construct(self):
+    random_walk(self, RESULTS['gadda2'], 'c o', 20, seed=42)
+
+
+class GenerateByWordGiovanni1(Scene):
+  def construct(self):
+    random_walk(self, RESULTS['giovanni1'], 'era', 17, seed=43)
+
+
+class GenerateByWordGiovanni2(Scene):
+  def construct(self):
+    random_walk(self, RESULTS['giovanni2'], 'era il', 16, seed=38)
