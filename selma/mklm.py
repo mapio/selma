@@ -6,10 +6,10 @@ import re
 def clean_text(corpus):
   res = [' ']
   for c in corpus:
-    l = c.lower()
-    if l.isalpha():
-      res.append(l)
-    elif l == ' ' and res[-1] != ' ':
+    lc = c.lower()
+    if lc.isalpha():
+      res.append(lc)
+    elif lc == ' ' and res[-1] != ' ':
       res.append(' ')
   return ''.join(res[1:])
 

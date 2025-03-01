@@ -47,20 +47,30 @@ def make_text(tokens, color):
   return T
 
 
-def build_markov_chain(scene, tokens, layout, node_scale, order=1):
-  T = make_text(tokens, BLACK)
-  scene.add(T)
-
+def build_markov_chain(tokens, order=1):
   nodes = (
     tokens
     if order == 1
     else [' '.join(tokens[i : i + order]) for i in range(len(tokens) - 1)]
   )
 
-  edges = list(zip(nodes, nodes[1:]))
-  G = nx.DiGraph(set(edges))
-  weight = {e: 0 for e in G.edges()}
+  pairs = list(zip(nodes, nodes[1:]))
+  edges = set(pairs)
+  weight = {e: 0 for e in edges}
+  for s, t in pairs:
+    weight[(s, t)] += 1
+  G = nx.DiGraph(edges)
   G.remove_edges_from(nx.selfloop_edges(G))
+
+  return G, pairs, weight
+
+
+def animate_training(scene, tokens, layout, node_scale, order=1):
+  T = make_text(tokens, BLACK)
+  scene.add(T)
+
+  G, pairs, weight = build_markov_chain(tokens, order)
+  weight = {e: 0 for e in set(pairs)}
 
   MG = MGraph(G, layout=layout, node_scale=node_scale)
 
@@ -78,8 +88,8 @@ def build_markov_chain(scene, tokens, layout, node_scale, order=1):
 
   highlight.step = 0
 
-  highlight(edges[0][0])
-  for s, t in edges:
+  highlight(pairs[0][0])
+  for s, t in pairs:
     weight[(s, t)] += 1
     if s != t:
       me = MG.medge(s, t)
@@ -92,15 +102,10 @@ def build_markov_chain(scene, tokens, layout, node_scale, order=1):
     if me:
       me.set_stroke(color=BLACK)
 
-  return weight
-
-
-RESULTS = {}
-
 
 class TrainByCharGadda1(Scene):
   def construct(self):
-    RESULTS['gadda1'] = build_markov_chain(
+    animate_training(
       self,
       tokenize(CORPORA['gadda'], by_char=True),
       layout=gvlayout_factory('neato', heightscale=0.5),
@@ -111,7 +116,7 @@ class TrainByCharGadda1(Scene):
 
 class TrainByCharGadda2(Scene):
   def construct(self):
-    RESULTS['gadda2'] = build_markov_chain(
+    animate_training(
       self,
       tokenize(CORPORA['gadda'], by_char=True),
       layout=gvlayout_factory('neato', heightscale=0.5),
@@ -122,7 +127,7 @@ class TrainByCharGadda2(Scene):
 
 class TrainByCharGadda3(Scene):
   def construct(self):
-    RESULTS['gadda3'] = build_markov_chain(
+    animate_training(
       self,
       tokenize(CORPORA['gadda'], by_char=True),
       layout=gvlayout_factory('neato', heightscale=0.5),
@@ -133,7 +138,7 @@ class TrainByCharGadda3(Scene):
 
 class TrainByWordGiovanni1(Scene):
   def construct(self):
-    RESULTS['giovanni1'] = build_markov_chain(
+    animate_training(
       self,
       tokenize(CORPORA['giovanni'], by_char=False),
       layout=gvlayout_factory('neato', heightscale=0.6),
@@ -144,7 +149,7 @@ class TrainByWordGiovanni1(Scene):
 
 class TrainByWordGiovanni2(Scene):
   def construct(self):
-    RESULTS['giovanni2'] = build_markov_chain(
+    animate_training(
       self,
       tokenize(CORPORA['giovanni'], by_char=False),
       layout=gvlayout_factory('neato', heightscale=0.6),
@@ -198,9 +203,8 @@ def generate0(rnd_next, num=100):
   return [rnd_next(None) for _ in range(num)]
 
 
-def random_walk(scene, weight, start, num, seed=None):
-  G = nx.DiGraph(set(weight.keys()))
-  G.remove_edges_from(nx.selfloop_edges(G))
+def random_walk(scene, tokens, order, start, num, seed=None):
+  G, _, weight = build_markov_chain(tokens, order)
   MG = MGraph(G, layout=gvlayout_factory('neato', heightscale=0.5), node_scale=0.8)
   for s, t in G.edges():
     me = MG.medge(s, t)
@@ -212,7 +216,6 @@ def random_walk(scene, weight, start, num, seed=None):
   T = make_text([g.split()[0] for g in gen], BACKGROUND)
   scene.add(T)
   s = gen[0]
-  order = len(s.split())
   dot = Dot(color=PURE_GREEN)
   dot.move_to(MG.mnode(gen[0]))
   scene.add(dot)
@@ -230,19 +233,22 @@ def random_walk(scene, weight, start, num, seed=None):
 
 class GenerateByCharGadda1(Scene):
   def construct(self):
-    random_walk(self, RESULTS['gadda1'], 'c', 20, seed=41)
+    random_walk(self, tokenize(CORPORA['gadda'], by_char=True), 1, 'c', 20, seed=41)
 
 
 class GenerateByCharGadda2(Scene):
   def construct(self):
-    random_walk(self, RESULTS['gadda2'], 'c o', 20, seed=42)
+    random_walk(self, tokenize(CORPORA['gadda'], by_char=True), 2, 'c o', 20, seed=42)
 
+class GenerateByCharGadda3(Scene):
+  def construct(self):
+    random_walk(self, tokenize(CORPORA['gadda'], by_char=True), 3, 'c o p', 20, seed=42)
 
 class GenerateByWordGiovanni1(Scene):
   def construct(self):
-    random_walk(self, RESULTS['giovanni1'], 'era', 17, seed=43)
+    random_walk(self, tokenize(CORPORA['giovanni'], by_char=False), 1, 'era', 17, seed=43)
 
 
 class GenerateByWordGiovanni2(Scene):
   def construct(self):
-    random_walk(self, RESULTS['giovanni2'], 'era il', 16, seed=38)
+    random_walk(self, tokenize(CORPORA['giovanni'], by_char=False), 2, 'era il', 16, seed=38)

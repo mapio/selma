@@ -13,7 +13,9 @@ BORDER = 0.3
 BORDER_COLOR = DARK_BROWN
 
 
-def test_draw(G, layout):
+def test_draw(G, layout = None):
+  if layout is None:
+    layout = gvlayout_factory('dot', fontsize=32, heightscale=.8)
   pos = {node: (pos[0], pos[1]) for node, pos in layout(G).items()}
   nx.draw_networkx_edges(
     G, pos, edge_color='black', connectionstyle='arc3,rad=0.1', arrows=True
