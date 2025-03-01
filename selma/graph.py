@@ -12,6 +12,7 @@ ARROW_STROKE = 2
 BORDER = 0.3
 BORDER_COLOR = DARK_BROWN
 
+
 def test_draw(G, layout):
   pos = {node: (pos[0], pos[1]) for node, pos in layout(G).items()}
   nx.draw_networkx_edges(
