@@ -1,10 +1,9 @@
 import networkx as nx
 import numpy as np
-
-from manim import VGroup, Text, Rectangle, MoveAlongPath, Arc, Animation, DARK_BROWN
+from manim import DARK_BROWN, Animation, Arc, MoveAlongPath, Rectangle, Text, VGroup
 
 from selma import BACKGROUND, FOREGROUND, MANIM_HEIGHT, MANIM_WIDTH
-from selma.geom import compute_arc, arc_intersect, shortest_arc
+from selma.geom import arc_intersect, compute_arc, shortest_arc
 
 EDGE_RADIUS = 10
 TIP_SIZE = 0.15

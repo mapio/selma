@@ -1,20 +1,20 @@
 from collections import deque
 
 from manim import (
-  Line,
-  Rectangle,
-  VGroup,
-  RIGHT,
+  DL,
+  DR,
   LEFT,
+  RIGHT,
   UL,
   UR,
-  DR,
-  DL,
-  FadeIn,
-  FadeOut,
   Animation,
   AnimationGroup,
+  FadeIn,
+  FadeOut,
+  Line,
+  Rectangle,
   Succession,
+  VGroup,
 )
 
 from selma import FOREGROUND

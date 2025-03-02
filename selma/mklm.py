@@ -1,6 +1,6 @@
-from collections import defaultdict
 import random
 import re
+from collections import defaultdict
 
 
 def clean_text(corpus):

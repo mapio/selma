@@ -1,5 +1,5 @@
 from importlib.metadata import version
-from logging import getLogger, WARNING
+from logging import WARNING, getLogger
 from pathlib import Path
 
 from manim import BLACK, Scene, config

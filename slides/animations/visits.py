@@ -1,10 +1,9 @@
-from manim import config, Scene, Dot, UP, DOWN, PURE_GREEN, GRAY_B, GRAY, BLACK
 import networkx as nx
+from manim import BLACK, DOWN, GRAY, GRAY_B, PURE_GREEN, UP, Dot, Scene, config
 
 from selma import BACKGROUND
-from selma.bags import SBag, QBag
-from selma.graph import gvlayout_factory, MGraph
-
+from selma.bags import QBag, SBag
+from selma.graph import MGraph, gvlayout_factory
 
 config.background_color = BACKGROUND
 

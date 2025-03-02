@@ -27,6 +27,9 @@ indent-width = 2
 [tool.ruff.format]
 quote-style = "single"
 
+[tool.ruff.lint]
+select = ["I", "E", "F"]
+
 [tool.hatch.version]
 source = "versioningit"
 

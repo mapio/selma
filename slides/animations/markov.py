@@ -2,11 +2,11 @@ from pathlib import Path
 from random import Random
 
 import networkx as nx
-from manim import Scene, Tex, UL, PURE_GREEN, VGroup, BLACK, Dot, config
+from manim import BLACK, PURE_GREEN, UL, Dot, Scene, Tex, VGroup, config
 
 from selma import BACKGROUND
+from selma.graph import BORDER_COLOR, MGraph, gvlayout_factory
 from selma.mklm import clean_text
-from selma.graph import MGraph, BORDER_COLOR, gvlayout_factory
 
 config.background_color = BACKGROUND
 
