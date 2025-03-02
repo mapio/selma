@@ -14,7 +14,7 @@ come mostrato nel [playground](/Playground.ipynb).
 ## Il curatore e il sognatore 
 
 <p align="left">
-  <img src="media/ces.webp" align="left" width="120" style="margin: 0 15px 15px 0;">
+  <img src="./slides/media/ces.webp" align="left" width="120" style="margin: 0 15px 15px 0;">
 </p>
 
 Usiamo ogni giorno motori di ricerca come **Google** per trovare informazioni e
