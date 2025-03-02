@@ -34,11 +34,7 @@ Like a diamond in the sky.
 
 
 def tokenize(corpus, by_char):
-  return (
-    [c for c in clean_text(corpus) if c != ' ']
-    if by_char
-    else clean_text(corpus).split()
-  )
+  return [c for c in clean_text(corpus) if c != ' '] if by_char else clean_text(corpus).split()
 
 
 def make_text(tokens, color):
@@ -48,11 +44,7 @@ def make_text(tokens, color):
 
 
 def build_markov_chain(tokens, order=1):
-  nodes = (
-    tokens
-    if order == 1
-    else [' '.join(tokens[i : i + order]) for i in range(len(tokens) - 1)]
-  )
+  nodes = tokens if order == 1 else [' '.join(tokens[i : i + order]) for i in range(len(tokens) - 1)]
 
   pairs = list(zip(nodes, nodes[1:]))
   edges = set(pairs)
@@ -162,10 +154,7 @@ class TrainByWordGiovanni2(Scene):
 
 
 def next_weight(weight):
-  return {
-    s: tuple(sorted((t, weight[(s, t)]) for ss, t in weight.keys() if ss == s))
-    for s, _ in weight
-  }
+  return {s: tuple(sorted((t, weight[(s, t)]) for ss, t in weight.keys() if ss == s)) for s, _ in weight}
 
 
 def next_weight0(corpus):
@@ -248,13 +237,9 @@ class GenerateByCharGadda3(Scene):
 
 class GenerateByWordGiovanni1(Scene):
   def construct(self):
-    random_walk(
-      self, tokenize(CORPORA['giovanni'], by_char=False), 1, 'era', 17, seed=43
-    )
+    random_walk(self, tokenize(CORPORA['giovanni'], by_char=False), 1, 'era', 17, seed=43)
 
 
 class GenerateByWordGiovanni2(Scene):
   def construct(self):
-    random_walk(
-      self, tokenize(CORPORA['giovanni'], by_char=False), 2, 'era il', 16, seed=38
-    )
+    random_walk(self, tokenize(CORPORA['giovanni'], by_char=False), 2, 'era il', 16, seed=38)

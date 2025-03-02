@@ -78,9 +78,7 @@ def compute_arc(P, Q, r):
   chord = Q - P
   d = np.linalg.norm(chord)
   if d > 2 * abs(r):
-    raise ValueError(
-      f'No real circle of radius {r} passes through P, Q (distance={d:.2f}).'
-    )
+    raise ValueError(f'No real circle of radius {r} passes through P, Q (distance={d:.2f}).')
 
   # Midpoint of the chord
   M = (P + Q) / 2
@@ -160,9 +158,7 @@ def circle_intersect(center, radius, rect):
 
 def arc_intersect(center, radius, start_angle, arc_angle, rect):
   candidate = [
-    (th, pt)
-    for (th, pt) in circle_intersect(center, radius, rect)
-    if in_arc_range(th, start_angle, arc_angle)
+    (th, pt) for (th, pt) in circle_intersect(center, radius, rect) if in_arc_range(th, start_angle, arc_angle)
   ]
   if len(candidate) != 1:
     warnings.warn(f'Expected 1 intersection with {rect}, got {len(candidate)}.')

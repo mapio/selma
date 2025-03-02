@@ -6,9 +6,7 @@ from visits import FFG, RGG
 
 from selma.graph import MGraph, gvlayout_factory
 
-FFGC = nx.DiGraph(
-  list(FFG.edges()) + [('Pazzi', 'Barbadori'), ('Lamberteschi', 'Ginori')]
-)
+FFGC = nx.DiGraph(list(FFG.edges()) + [('Pazzi', 'Barbadori'), ('Lamberteschi', 'Ginori')])
 
 
 def random_walk(scene, G, steps, wait, seed):

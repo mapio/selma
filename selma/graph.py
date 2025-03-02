@@ -16,9 +16,7 @@ def test_draw(G, layout=None):
   if layout is None:
     layout = gvlayout_factory('neato', fontsize=32, heightscale=0.8)
   pos = {node: (pos[0], pos[1]) for node, pos in layout(G).items()}
-  nx.draw_networkx_edges(
-    G, pos, edge_color='black', connectionstyle='arc3,rad=0.1', arrows=True
-  )
+  nx.draw_networkx_edges(G, pos, edge_color='black', connectionstyle='arc3,rad=0.1', arrows=True)
   _ = nx.draw_networkx_labels(G, pos)
 
 
@@ -43,16 +41,11 @@ def gvlayout_factory(algo='dot', fontsize=32, heightscale=1):
     A.layout(algo)
 
     pos_array = rescale_pos(
-      np.array(
-        [A.get_node(node).attr['pos'].split(',') for node in G.nodes()], dtype=float
-      ),
+      np.array([A.get_node(node).attr['pos'].split(',') for node in G.nodes()], dtype=float),
       heightscale,
     )
 
-    return {
-      node: np.array([pos_array[i, 0], pos_array[i, 1], 0])
-      for i, node in enumerate(G.nodes())
-    }
+    return {node: np.array([pos_array[i, 0], pos_array[i, 1], 0]) for i, node in enumerate(G.nodes())}
 
   return gvlayout
 
@@ -61,16 +54,16 @@ def _medge(R, S, radius, color=FOREGROUND):
   center, start_angle, arc_angle = compute_arc(R.get_center(), S.get_center(), radius)
   radius = abs(radius)
 
-  arc = Arc(
-    radius=radius, start_angle=start_angle, angle=arc_angle, stroke_color=BACKGROUND
-  ).move_arc_center_to([center[0], center[1], 0])
+  arc = Arc(radius=radius, start_angle=start_angle, angle=arc_angle, stroke_color=BACKGROUND).move_arc_center_to(
+    [center[0], center[1], 0]
+  )
 
   θr = arc_intersect(center, radius, start_angle, arc_angle, R)
   θs = arc_intersect(center, radius, start_angle, arc_angle, S)
 
-  arrow = Arc(
-    radius=radius, start_angle=θr, angle=shortest_arc(θr, θs), stroke_color=color
-  ).move_arc_center_to([center[0], center[1], 0])
+  arrow = Arc(radius=radius, start_angle=θr, angle=shortest_arc(θr, θs), stroke_color=color).move_arc_center_to(
+    [center[0], center[1], 0]
+  )
   arrow.set_stroke(width=ARROW_STROKE)
   arrow.add_tip(tip_width=TIP_SIZE, tip_length=TIP_SIZE)
 

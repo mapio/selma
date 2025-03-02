@@ -35,11 +35,7 @@ class MQueue:
 
   def enqueue(self, re) -> Animation:
     re.next_to(self.rect, LEFT)
-    succ = [
-      AnimationGroup(
-        FadeIn(re), self.trbl_sides[3].animate.set_opacity(0), run_time=0.5
-      )
-    ]
+    succ = [AnimationGroup(FadeIn(re), self.trbl_sides[3].animate.set_opacity(0), run_time=0.5)]
     self.queue.appendleft(re)
     buff = 0
     shift = []
@@ -55,9 +51,7 @@ class MQueue:
     return Succession(
       AnimationGroup(self.trbl_sides[1].animate.set_opacity(0), run_time=0.5),
       e.animate.next_to(self.rect, RIGHT),
-      AnimationGroup(
-        self.trbl_sides[1].animate.set_opacity(1), FadeOut(e), run_time=0.5
-      ),
+      AnimationGroup(self.trbl_sides[1].animate.set_opacity(1), FadeOut(e), run_time=0.5),
     )
 
 
@@ -76,11 +70,7 @@ class MStack:
 
   def push(self, re) -> Animation:
     re.next_to(self.rect, RIGHT)
-    succ = [
-      AnimationGroup(
-        FadeIn(re), self.trbl_sides[1].animate.set_opacity(0), run_time=0.5
-      )
-    ]
+    succ = [AnimationGroup(FadeIn(re), self.trbl_sides[1].animate.set_opacity(0), run_time=0.5)]
     self.stack.append(re)
     buff = 0
     shift = []
@@ -99,9 +89,7 @@ class MStack:
         run_time=0.5,
       ),
       e.animate.next_to(self.rect, RIGHT),
-      AnimationGroup(
-        self.trbl_sides[1].animate.set_opacity(1), FadeOut(e), run_time=0.5
-      ),
+      AnimationGroup(self.trbl_sides[1].animate.set_opacity(1), FadeOut(e), run_time=0.5),
     )
 
 

@@ -15,9 +15,7 @@ def clean_text(corpus):
 
 
 class MarkovChainTextGenerator:
-  def __init__(
-    self, order=2, token_type='word', smoothing_alpha=0.001, interpolation=True
-  ):
+  def __init__(self, order=2, token_type='word', smoothing_alpha=0.001, interpolation=True):
     """
     Markov Chain Text Generator with variable order and tokenization type.
 
@@ -64,22 +62,16 @@ class MarkovChainTextGenerator:
     prefix = tuple(prefix)
     if prefix in self.ngram_counts:
       total = self.total_counts[prefix] + self.smoothing_alpha * len(self.vocab)
-      return {
-        token: (count + self.smoothing_alpha) / total
-        for token, count in self.ngram_counts[prefix].items()
-      }
+      return {token: (count + self.smoothing_alpha) / total for token, count in self.ngram_counts[prefix].items()}
 
     # Backoff: Try shorter prefixes
     if self.interpolation:
       for k in range(self.order - 1, 0, -1):
         shorter_prefix = prefix[-k:]
         if shorter_prefix in self.ngram_counts:
-          total = self.total_counts[shorter_prefix] + self.smoothing_alpha * len(
-            self.vocab
-          )
+          total = self.total_counts[shorter_prefix] + self.smoothing_alpha * len(self.vocab)
           return {
-            token: (count + self.smoothing_alpha) / total
-            for token, count in self.ngram_counts[shorter_prefix].items()
+            token: (count + self.smoothing_alpha) / total for token, count in self.ngram_counts[shorter_prefix].items()
           }
 
     # If no known transitions, return uniform probabilities over vocab
@@ -92,11 +84,7 @@ class MarkovChainTextGenerator:
     if not self.ngram_counts:
       raise ValueError('Model is not trained. Call `train(corpus)` first.')
 
-    tokens = (
-      list(self.tokenize(seed))
-      if seed
-      else [random.choice(list(self.vocab - {'<UNK>'}))]
-    )
+    tokens = list(self.tokenize(seed)) if seed else [random.choice(list(self.vocab - {'<UNK>'}))]
 
     while len(tokens) < length:
       prefix = tuple(tokens[-self.order :])
