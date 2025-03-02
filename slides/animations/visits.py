@@ -2,45 +2,11 @@ from manim import config, Scene, Dot, UP, DOWN, PURE_GREEN, GRAY_B, GRAY, BLACK
 import networkx as nx
 
 from selma import BACKGROUND
-from selma.datastructures import MQueue, MStack
+from selma.bags import SBag, QBag
 from selma.graph import gvlayout_factory, MGraph
 
 
 config.background_color = BACKGROUND
-
-
-class QBag:
-  def __init__(self, width, scale):
-    self.container = MQueue(width=width, scale=scale)
-
-  def take(self):
-    return self.container.dequeue()
-
-  def give(self, n):
-    return self.container.enqueue(n)
-
-  def is_empty(self):
-    return not self.container.queue
-
-  def peek(self):
-    return self.container.queue[-1][1].text
-
-
-class SBag:
-  def __init__(self, width, scale):
-    self.container = MStack(width=width, scale=scale)
-
-  def take(self):
-    return self.container.pop()
-
-  def give(self, n):
-    return self.container.push(n)
-
-  def is_empty(self):
-    return not self.container.stack
-
-  def peek(self):
-    return self.container.stack[-1][1].text
 
 
 # Ronald L. Breiger and Philippa E. Pattison

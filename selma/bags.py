@@ -103,3 +103,37 @@ class MStack:
         self.trbl_sides[1].animate.set_opacity(1), FadeOut(e), run_time=0.5
       ),
     )
+
+
+class QBag:
+  def __init__(self, width, scale):
+    self.container = MQueue(width=width, scale=scale)
+
+  def take(self):
+    return self.container.dequeue()
+
+  def give(self, n):
+    return self.container.enqueue(n)
+
+  def is_empty(self):
+    return not self.container.queue
+
+  def peek(self):
+    return self.container.queue[-1][1].text
+
+
+class SBag:
+  def __init__(self, width, scale):
+    self.container = MStack(width=width, scale=scale)
+
+  def take(self):
+    return self.container.pop()
+
+  def give(self, n):
+    return self.container.push(n)
+
+  def is_empty(self):
+    return not self.container.stack
+
+  def peek(self):
+    return self.container.stack[-1][1].text
