@@ -5,11 +5,11 @@ from IPython.display import HTML, Markdown, display
 
 from selma import BACKGROUND
 
-BASENAME = './media/gen'
+BASENAME = './media'
 
 
 def search_file(prefix, ext):
-  files = glob.glob(f'{BASENAME}/{prefix}*.{ext}')
+  files = list(glob.glob(f'{BASENAME}/gen/{prefix}*.{ext}')) + list(glob.glob(f'{BASENAME}/{prefix}*.{ext}'))
   if len(files) == 0:
     raise FileNotFoundError(f"No match found for '{prefix}*.{ext}'")
   elif len(files) > 1:
