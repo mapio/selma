@@ -13,21 +13,8 @@ config.background_color = BACKGROUND
 HIGHLIGHT_COLOR = PURE_GREEN
 
 CORPORA = {
-  'mc': """
-Markov chains are mathematical systems that undergo transitions from one state to another 
-on a state space. A sequence of possible events in which the probability of each event 
-depends only on the state attained in the previous event is called a Markov chain.
-""",
-  'ttls': """
-Twinkle, twinkle, little star,
-How I wonder what you are!
-Up above the world so high,
-Like a diamond in the sky.
-""",
   'gadda': 'Come poco pepe a coppia cuoce e scoppia',  # Gadda
   'giovanni': 'In principio era il Verbo, e il Verbo era presso Dio, e il Verbo era Dio',  # Vangelo di Giovanni, 1:1
-  'commedia': Path('../../data/commedia.txt').read_text(),
-  'promessi': Path('../../data/papini.txt').read_text(),
 }
 
 # Training

@@ -1,7 +1,6 @@
 __pycache__/
 .venv
 animations/media/
-data/
 dist/
 local/
 slides/*.html
