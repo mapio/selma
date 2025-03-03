@@ -157,7 +157,6 @@ def next_weight(weight):
   return {s: tuple(sorted((t, weight[(s, t)]) for ss, t in weight.keys() if ss == s)) for s, _ in weight}
 
 
-
 def mk_rnd_next(next_weight, seed=None):
   rng = Random(seed)
 
@@ -183,7 +182,6 @@ def generate(rnd_next, start, num=100):
       break
     res.append(n)
   return res
-
 
 
 def random_walk(scene, tokens, order, start, num, seed=None):

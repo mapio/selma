@@ -9,9 +9,13 @@ def clean_text(corpus):
     lc = c.lower()
     if lc.isalpha():
       res.append(lc)
-    elif lc == ' ' and res[-1] != ' ':
+    elif res[-1] != ' ':
       res.append(' ')
   return ''.join(res[1:])
+
+
+def topk(chain, prefix, k):
+  return sorted(chain.ngram_counts[prefix].items(), key=lambda x: x[1], reverse=True)[:k]
 
 
 class MarkovChainTextGenerator:
