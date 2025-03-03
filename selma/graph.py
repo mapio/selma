@@ -70,6 +70,18 @@ def _medge(R, S, radius, color=FOREGROUND):
   return arc, arrow
 
 
+def make_node(node, stroke_color=BORDER_COLOR, fill_color=BACKGROUND):
+  t = Text(node, color=FOREGROUND, font_size=32)
+  r = Rectangle(
+    width=t.width + BORDER,
+    height=t.height + BORDER,
+    fill_color=fill_color,
+    fill_opacity=1,
+    color=stroke_color,
+  ).move_to(t.get_center())
+  return VGroup(r, t)
+
+
 class MGraph:
   def __init__(
     self,
@@ -86,23 +98,15 @@ class MGraph:
     self._nodes = {}
     rect = {}
     for node in G.nodes():
-      t = Text(node, color=FOREGROUND, font_size=32)
-      t.move_to(pos[node])
-      r = Rectangle(
-        width=t.width + BORDER,
-        height=t.height + BORDER,
-        fill_color=fill_color,
-        fill_opacity=1,
-        color=stroke_color,
-      ).move_to(t.get_center())
-      # r.set_z_index(t.z_index - 1)
-      rect[node] = r
-      self._nodes[node] = VGroup(r, t).scale(node_scale)
+      n = make_node(node, stroke_color, fill_color)
+      n.move_to(pos[node])
+      n.scale(node_scale)
+      self._nodes[node] = n
+      rect[node] = n[0]
     self._edges = {}
     self._paths = {}
     for s, t in G.edges():
       arc, arrow = _medge(rect[s], rect[t], EDGE_RADIUS)
-      # arrow.set_z_index(min(rect[s].z_index, rect[t].z_index) - 1)
       self._edges[(s, t)] = arrow
       self._paths[(s, t)] = arc
     self.mnodes = VGroup(list(self._nodes.values()))

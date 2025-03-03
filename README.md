@@ -6,9 +6,11 @@
 Questo repository contiene il materiale presentato il 3 marzo 2025 presso
 l'[Istituto di Istruzione Speriore Cremona](https://www.iiscremona.edu.it/).
 
-È possibile accedere ad una [copia online delle slide](https://mapio.github.io/selma/), 
-oppure, una volta installate le dipendenze descritte in [requirements.txt](/requirements.txt), 
-scaricare questo repository ed utilizzare la libreria [selma](/selma/) per sperimentare in prima persona coi concetti presentati!
+È possibile accedere ad una [copia online delle
+slide](https://mapio.github.io/selma/), oppure, una volta installate le
+dipendenze descritte in [requirements.txt](/requirements.txt), scaricare questo
+repository ed utilizzare la libreria [selma](/selma/) per giocare con le catene
+di Markov come mostrato nel [playground](/Playground.ipynb).
 
 ## Il curatore e il sognatore 
 
