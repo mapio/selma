@@ -3,8 +3,9 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 [![License: CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-blue.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
 
-Questo repository contiene il materiale presentato il 3 marzo 2025 presso
-l'[Istituto di Istruzione Speriore Cremona](https://www.iiscremona.edu.it/).
+Questo repository contiene il materiale presentato il 10 dicembre 2025 presso il
+[Dipartimento di Informatica](https://www.di.unimi.it/) nell'ambito del progetto
+l'[DIGA](https://www.mondodigitale.org/progetti/diga).
 
 È possibile accedere ad una [copia online delle
 slide](https://mapio.github.io/selma/), oppure, una volta installate le
@@ -25,8 +26,8 @@ tra un *curatore* che raccoglie e organizza una biblioteca e un *sognatore* che,
 ispirato da quei libri, prova a immaginarne uno nuovo?
 
 Attraverso una accattivante introduzione a concetti come i *grafi* e le *catene
-di Markov*, lo studio di *algoritmi e strutture dati*, questa presentazione
-illustrerà i principi di funzionamento di *m*otori di ricerca* e *modelli
+di Markov*, lo studio di *algoritmi e strutture dati* e dei *generatori pseudocasuali*, 
+questa presentazione illustrerà i principi di funzionamento di *m*otori di ricerca* e *modelli
 generativi del linguaggio* cogliendo l'occasione per mostrare gli aspetti meno
 noti, ma forse più affascinanti, dell'*informatica*.
 
