@@ -5,7 +5,7 @@
 
 Questo repository contiene il materiale presentato il 10 dicembre 2025 presso il
 [Dipartimento di Informatica](https://www.di.unimi.it/) nell'ambito del progetto
-l'[DIGA](https://www.mondodigitale.org/progetti/diga).
+[DIGA](https://www.mondodigitale.org/progetti/diga).
 
 È possibile accedere ad una [copia online delle
 slide](https://mapio.github.io/selma/), oppure, una volta installate le
