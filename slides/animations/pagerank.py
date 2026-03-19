@@ -28,7 +28,7 @@ def random_walk(scene, G, steps, wait, seed):
     if rng.random() < 0.2 or not ts:
       t = rng.choice(nodes)
       scene.remove(dot)
-      dot.move_to(MG.mnode(s).get_center())
+      dot.move_to(MG.mnode(t).get_center())
       scene.wait(wait)
       scene.add(dot)
     else:
