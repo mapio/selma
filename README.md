@@ -3,9 +3,9 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 [![License: CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-blue.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
 
-Questo repository contiene il materiale presentato il 19 marzo 2026 presso
-l'[Istituto Istruzione Superiore "Luigi Cremona"](https://www.iiscremona.edu.it)
-di Milano.
+Questo repository contiene il materiale presentato nel mese di aprile 2026 presso
+il [Liceo e Istituto Tecnico Primo Levi](primolevibollate.edu.it/) di Milano nell'ambito del
+progetto [DIGA](https://www.mondodigitale.org/progetti/diga).
 
 È possibile accedere ad una [copia online delle
 slide](https://mapio.github.io/selma/), oppure, una volta installate le
