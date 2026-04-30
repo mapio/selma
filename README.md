@@ -4,7 +4,7 @@
 [![License: CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-blue.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
 
 Questo repository contiene il materiale presentato nel mese di aprile 2026 presso
-il [Liceo e Istituto Tecnico Primo Levi](primolevibollate.edu.it/) di Milano nell'ambito del
+il [Liceo e Istituto Tecnico Primo Levi](https://primolevibollate.edu.it/) di Milano nell'ambito del
 progetto [DIGA](https://www.mondodigitale.org/progetti/diga).
 
 È possibile accedere ad una [copia online delle
